@@ -18,7 +18,7 @@ namespace Game.Controllers
             {
                 var targetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-                float delta = ((targetPosition - rb.position) * 0.999f).x;
+                float delta = (targetPosition - rb.position).x;
                 _currentVelocity += delta;
             }
 

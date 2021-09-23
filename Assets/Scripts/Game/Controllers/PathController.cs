@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -11,7 +11,10 @@ namespace Game.Controllers
     {
         [SerializeField] private int subdivides;
 
-        public List<Vector2> GeneratePath
+        /// <summary>
+        /// ¬озвращает точки исход€ из количества точек и ширины по которой они будут расположены.
+        /// </summary>
+        public Collection<Vector2> GeneratePath
         (
             Vector2 startPoint, 
             Vector2 endPoint, 
@@ -19,7 +22,7 @@ namespace Game.Controllers
             int count
         )
         {
-            var list = new List<Vector2>();
+            var list = new Collection<Vector2>();
 
             list.Add(startPoint);
 
@@ -30,12 +33,15 @@ namespace Game.Controllers
 
             list.Add(endPoint);
 
-            return Subdivide(list, subdivides);
+            return list;
         }
 
-        private List<Vector2> Subdivide(List<Vector2> points, int divides)
+        /// <summary>
+        /// ѕодраздел€ет точки определЄнное количество раз.
+        /// </summary>
+        private Collection<Vector2> Subdivide(Collection<Vector2> points, int divides)
         {
-            var newPoints = new List<Vector2>();
+            var newPoints = new Collection<Vector2>();
             for (int i = 0; i < points.Count - 1; i++)
             {
                 var current = points[i];

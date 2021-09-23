@@ -1,5 +1,6 @@
-using System.Linq;
 using System;
+using System.Linq;
+using System.Collections.ObjectModel;
 using UnityEngine;
 using ESparrow.Utils.Extensions;
 
@@ -11,7 +12,10 @@ namespace Game.Controllers
         [SerializeField] private MeshFilter firstFilter;
         [SerializeField] private MeshFilter secondFilter;
 
-        public void Set(Mesh[] slices)
+        /// <summary>
+        /// Устанавливает двум заготовленным мешам форму из аргумента и симулирует из них ткань.
+        /// </summary>
+        public void Set(Collection<Mesh> slices)
         {
             SetMesh(firstFilter, slices.First());
             SetMesh(secondFilter, slices.Last());

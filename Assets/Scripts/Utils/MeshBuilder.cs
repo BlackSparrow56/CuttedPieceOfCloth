@@ -21,27 +21,21 @@ namespace Utils
         public MeshBuilder AddTriangle(Vector3 first, Vector3 second, Vector3 third)
         {
             var dictionary = _mesh.AsDictionary();
-            dictionary.Add(dictionary.Count, first);
-            dictionary.Add(dictionary.Count, second);
-            dictionary.Add(dictionary.Count, third);
+            dictionary.Add(first, dictionary.Count);
+            dictionary.Add(second, dictionary.Count);
+            dictionary.Add(third, dictionary.Count);
 
             Apply(dictionary);
 
-            var list = new List<int>(_mesh.triangles);
+            var triangles = new List<int>(_mesh.triangles);
 
-            list.Add(IndexOf(first));
-            list.Add(IndexOf(second));
-            list.Add(IndexOf(third));
+            triangles.Add(dictionary[first]);
+            triangles.Add(dictionary[second]);
+            triangles.Add(dictionary[third]);
 
-            _mesh.triangles = list.ToArray();
+            _mesh.triangles = triangles.ToArray();
 
             return this;
-        
-            int IndexOf(Vector3 vertex)
-            {
-                var list = _mesh.vertices.ToList();
-                return list.IndexOf(vertex);
-            }
         }
 
         public MeshBuilder AddQuad(Vector3 first, Vector3 second, Vector3 third, Vector3 fourth)
@@ -54,9 +48,9 @@ namespace Utils
             return _mesh;
         }
 
-        private void Apply(Dictionary<int, Vector3> dictionary)
+        private void Apply(Dictionary<Vector3, int> dictionary)
         {
-            _mesh.vertices = dictionary.Values.ToArray();
+            _mesh.vertices = dictionary.Keys.ToArray();
         }
     }
 }

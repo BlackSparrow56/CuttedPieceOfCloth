@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 using Utils;
 using ESparrow.Utils.Extensions;
@@ -14,12 +14,16 @@ namespace Game.Controllers
 
         [SerializeField] private Rect rect;
 
-        public Mesh[] GetSlicedMeshes(List<Vector2> points)
+        // Основной скрипт, остальные созданы для его корректной работы
+        /// <summary>
+        /// Принимает точки, по которым резать прямоугольник и возвращает два меша.
+        /// </summary>
+        public Collection<Mesh> GetSlicedMeshes(Collection<Vector2> points)
         {
-            return GetLeftMesh(points).ConcatWith(GetRightMesh(points)).ToArray();
+            return GetLeftMesh(points).ConcatWith(GetRightMesh(points)).AsCollection();
         }
 
-        private Mesh GetLeftMesh(List<Vector2> points)
+        private Mesh GetLeftMesh(Collection<Vector2> points)
         {
             var offset = new Vector2(-range / 2, 0);
 
@@ -40,7 +44,7 @@ namespace Game.Controllers
             return builder.Build();
         }
 
-        private Mesh GetRightMesh(List<Vector2> points)
+        private Mesh GetRightMesh(Collection<Vector2> points)
         {
             var offset = new Vector2(range / 2, 0);
 
