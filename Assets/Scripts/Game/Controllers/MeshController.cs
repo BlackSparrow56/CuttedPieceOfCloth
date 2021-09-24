@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 using ESparrow.Utils.Extensions;
@@ -9,6 +10,8 @@ namespace Game.Controllers
     [Serializable]
     public class MeshController
     {
+        [SerializeField] private int subdividesCount;
+
         [SerializeField] private MeshFilter firstFilter;
         [SerializeField] private MeshFilter secondFilter;
 
@@ -29,9 +32,39 @@ namespace Game.Controllers
 
                 renderer.sharedMesh = mesh;
 
-                for (int i = 0; i < cloth.vertices.Length; i++)
+                SubdividePoints();
+                SetMaxDistance();
+
+                void SubdividePoints()
                 {
-                    cloth.coefficients[i].maxDistance = Mathf.Abs(cloth.vertices[i].x / 25f);
+                    var vertices = new List<Vector3>();
+                    for (int i = 0; i < cloth.vertices.Length; i++)
+                    {
+                        var current = cloth.vertices[i];
+
+                        vertices.Add(current);
+
+                        if (i != cloth.vertices.Length - 1)
+                        {
+                            var next = cloth.vertices[i + 1];
+
+                            for (int j = 0; j < subdividesCount; j++)
+                            {
+                                float progress = (float)j / subdividesCount;
+
+                                var point = Vector3.Lerp(current, next, progress);
+                                vertices.Add(point);
+                            }
+                        }
+                    }
+                }
+
+                void SetMaxDistance()
+                {
+                    for (int i = 0; i < cloth.vertices.Length; i++)
+                    {
+                        cloth.coefficients[i].maxDistance = Mathf.Abs(cloth.vertices[i].x / 25f);
+                    }
                 }
             }
         }

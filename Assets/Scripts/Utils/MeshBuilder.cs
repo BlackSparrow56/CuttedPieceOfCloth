@@ -1,6 +1,8 @@
 using System.Linq;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
+using ESparrow.Utils.Extensions;
 
 namespace Utils
 {
@@ -20,22 +22,35 @@ namespace Utils
         
         public MeshBuilder AddTriangle(Vector3 first, Vector3 second, Vector3 third)
         {
-            var dictionary = _mesh.AsDictionary();
-            dictionary.Add(first, dictionary.Count);
-            dictionary.Add(second, dictionary.Count);
-            dictionary.Add(third, dictionary.Count);
+            var vertices = GetVertices();
+            _mesh.vertices = vertices.ToArray();
 
-            Apply(dictionary);
-
-            var triangles = new List<int>(_mesh.triangles);
-
-            triangles.Add(dictionary[first]);
-            triangles.Add(dictionary[second]);
-            triangles.Add(dictionary[third]);
-
+            var triangles = GetTriangles();
             _mesh.triangles = triangles.ToArray();
 
             return this;
+
+            List<Vector3> GetVertices()
+            {
+                var vertices = new List<Vector3>(_mesh.vertices);
+
+                vertices.Add(first);
+                vertices.Add(second);
+                vertices.Add(third);
+
+                return vertices;
+            }
+
+            List<int> GetTriangles()
+            {
+                var triangles = new List<int>(_mesh.triangles);
+
+                triangles.Add(vertices.IndexOf(first));
+                triangles.Add(vertices.IndexOf(second));
+                triangles.Add(vertices.IndexOf(third));
+
+                return triangles;
+            }
         }
 
         public MeshBuilder AddQuad(Vector3 first, Vector3 second, Vector3 third, Vector3 fourth)
@@ -46,11 +61,6 @@ namespace Utils
         public Mesh Build()
         {
             return _mesh;
-        }
-
-        private void Apply(Dictionary<Vector3, int> dictionary)
-        {
-            _mesh.vertices = dictionary.Keys.ToArray();
         }
     }
 }

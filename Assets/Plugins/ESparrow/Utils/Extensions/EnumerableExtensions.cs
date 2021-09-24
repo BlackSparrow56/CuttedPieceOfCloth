@@ -313,6 +313,11 @@ namespace ESparrow.Utils.Extensions
             return self.AsSingleCollection().With(other);
         }
 
+        public static IEnumerable<T> ConcatWith<T>(this IEnumerable<T> self, T other)
+        {
+            return self.Concat(other.AsSingleCollection());
+        }
+
         public static Collection<T> AsCollection<T>(this IEnumerable<T> self)
         {
             return new Collection<T>(self.ToList());
